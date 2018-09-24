@@ -1,7 +1,7 @@
 tomcat7_user: tomcat
 tomcat7_catalina_bases: []
 tomcat7_catalina_base_root: /srv
-tomcat7_default_group: "{{ _catalina_base_user }}"
+tomcat7_default_group: "{{ lookup('pipe','id -gn') }}"
 _tomcat7_default_xms: "{{ tomcat7_default_xms | default('-Xms768m') }}"
 _tomcat7_default_xmx: "{{ tomcat7_default_xmx | default('-Xmx1024m') }}"
 _tomcat7_default_extra_opts: "{{ tomcat7_default_extra_opts | default('') }}"
@@ -56,7 +56,7 @@ _tomcat7_systemd_env: |
     ExecStart={{ tomcat7_dest }}/bin/catalina.sh start
     ExecStop={{ tomcat7_dest }}/bin/catalina.sh stop {{ _catalina_base_stop_wait_in_s }}{{ ' -force' if _catalina_base_stop_allow_kill9 else '' }}
     User={{ _catalina_base_user }}
-    Group={{ _catalina_base_user }}
+    Group={{ _catalina_base_group }}
 
 _tomcat7_initd_env: |
     {% for key, value in _tomcat7_common_env.iteritems() %}
